@@ -18,7 +18,7 @@ const instructions = Platform.select({
 })
 
 //interface Props {}
-const App: FC<{}> = () => (
+const App: FC<{}> = (): React.ReactElement => (
     <View style={styles.container}>
         <Text style={styles.welcome}>Welcome to React Native!</Text>
         <Text style={styles.instructions}>To get started, edit App.tsx</Text>
