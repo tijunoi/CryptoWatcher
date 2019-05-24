@@ -1,9 +1,11 @@
 import Binance from 'binance-api-node'
 import {
     CurrencyListsActions,
-    GET_24H_STATS_LIST,
-    Set24HStatsListAction,
-    SET_24H_STATS_LIST,
+    GET_DAILY_STATS_LIST,
+    SetDailyStatsListAction,
+    SET_DAILY_STATS_LIST,
+    GET_DAILY_STATS_LIST_COMMIT,
+    GetDailyStatsListCommitAction,
 } from './types'
 
 const client = Binance()
@@ -11,17 +13,25 @@ const client = Binance()
 /**
  * Create redux-offline action that will call dailyStats of all symbols in Binance
  */
-export const get24HCurrencyList = (): CurrencyListsActions => ({
-    type: GET_24H_STATS_LIST,
+export const getDailyStatsList = (): CurrencyListsActions => ({
+    type: GET_DAILY_STATS_LIST,
     useBinanceClient: true,
     meta: {
-        offline: { effect: client.dailyStats },
+        offline: {
+            effect: client.dailyStats,
+            commit: getDailyStatsListCommit(),
+        },
     },
 })
 
-export const set24HCurrencyList = (
-    payload: Set24HStatsListAction['payload']
+const getDailyStatsListCommit = (): GetDailyStatsListCommitAction => ({
+    type: GET_DAILY_STATS_LIST_COMMIT,
+    //payload is injected by redux-offline
+})
+
+export const setDailyStatsList = (
+    payload: SetDailyStatsListAction['payload']
 ): CurrencyListsActions => ({
-    type: SET_24H_STATS_LIST,
+    type: SET_DAILY_STATS_LIST,
     payload,
 })

@@ -1,22 +1,38 @@
-import { OfflineAction } from '@redux-offline/redux-offline/lib/types'
+import { Binance, DailyStatsResult } from 'binance-api-node'
 
-export const GET_24H_STATS_LIST = 'GET_24H_STATS_LIST'
-export const SET_24H_STATS_LIST = 'SET_24H_STATS_LIST'
+export const GET_DAILY_STATS_LIST = 'GET_DAILY_STATS_LIST'
+export const GET_DAILY_STATS_LIST_COMMIT = 'GET_DAILY_STATS_LIST_COMMIT'
+export const SET_DAILY_STATS_LIST = 'SET_DAILY_STATS_LIST'
 
-export interface BinanceClientOfflineAction extends OfflineAction {
+export interface BinanceClientOfflineAction {
     useBinanceClient: true
 }
 
-export interface Get24HStatsListAction extends BinanceClientOfflineAction {
-    type: typeof GET_24H_STATS_LIST
+export interface GetDailyStatsListAction extends BinanceClientOfflineAction {
+    type: typeof GET_DAILY_STATS_LIST
+    meta: {
+        offline: {
+            effect: Binance['dailyStats']
+            commit: GetDailyStatsListCommitAction
+        }
+    }
 }
 
-export interface Set24HStatsListAction {
-    type: typeof SET_24H_STATS_LIST
-    payload: Symbol24H[]
+export interface GetDailyStatsListCommitAction {
+    type: typeof GET_DAILY_STATS_LIST_COMMIT
+    //extract the value of what the api client returns to avoid duplicating types
+    payload?: Result<ReturnType<Binance['dailyStats']>>
 }
 
-export type CurrencyListsActions = Get24HStatsListAction | Set24HStatsListAction
+export interface SetDailyStatsListAction {
+    type: typeof SET_DAILY_STATS_LIST
+    payload: DailyStatsResult[]
+}
+
+export type CurrencyListsActions =
+    | GetDailyStatsListAction
+    | GetDailyStatsListCommitAction
+    | SetDailyStatsListAction
 
 export function isBinanceAction(action: any): action is BinanceClientOfflineAction {
     return action.useBinanceClient === true
