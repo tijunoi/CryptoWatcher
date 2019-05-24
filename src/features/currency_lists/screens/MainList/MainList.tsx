@@ -1,19 +1,19 @@
 import React, { Component, ReactElement } from 'react'
-import { View, Text } from 'react-native'
+import { View } from 'react-native'
 import { NavigationDrawerScreenOptions } from 'react-navigation'
-import { Dispatch } from 'redux'
-import { connect } from 'react-redux'
-import { getDailyStatsList } from '../../redux/actions'
+import { CurrencyList } from '../../components'
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-    getDailyStats: (): void => {
-        dispatch(getDailyStatsList())
-    },
-})
+export interface StoreProps {
+    list: DailyStatsSymbol[]
+    online: boolean
+    isListRefreshing: boolean
+}
 
-type DispatchProps = ReturnType<typeof mapDispatchToProps>
+export interface DispatchProps {
+    getDailyStats: () => void
+}
 
-type Props = DispatchProps
+type Props = StoreProps & DispatchProps
 
 class MainList extends Component<Props> {
     static navigationOptions: NavigationDrawerScreenOptions = {
@@ -26,15 +26,17 @@ class MainList extends Component<Props> {
     }
 
     render(): ReactElement {
+        const { list, isListRefreshing, getDailyStats } = this.props
         return (
             <View>
-                <Text> MainList!!!</Text>
+                <CurrencyList
+                    isListRefreshing={isListRefreshing}
+                    currencyList={list}
+                    onRefresh={getDailyStats}
+                />
             </View>
         )
     }
 }
 
-export default connect<{}, DispatchProps>(
-    null,
-    mapDispatchToProps
-)(MainList)
+export default MainList

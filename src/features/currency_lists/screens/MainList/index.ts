@@ -1,3 +1,5 @@
 import MainList from './MainList'
+import MainListContainer from './MainListContainer'
 
-export default MainList
+export { MainList }
+export default MainListContainer

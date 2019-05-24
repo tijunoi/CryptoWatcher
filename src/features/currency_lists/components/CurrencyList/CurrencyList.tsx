@@ -7,6 +7,7 @@ import Placeholder, { Line } from 'rn-placeholder'
 export interface OwnProps {
     currencyList: DailyStatsSymbol[]
     isListRefreshing: boolean
+    onRefresh?: () => void
 }
 
 type Props = OwnProps
@@ -49,14 +50,16 @@ class CurrencyList extends Component<Props> {
     }
 
     render(): ReactElement {
-        const { currencyList, isListRefreshing } = this.props
+        const { currencyList, isListRefreshing, onRefresh } = this.props
         return (
             <FlatList
                 refreshing={isListRefreshing}
                 data={currencyList}
+                onRefresh={onRefresh}
                 renderItem={this.renderItem}
                 keyExtractor={(item): string => item.symbol}
                 ListEmptyComponent={(): ReactElement => <>{this.renderEmptyPlaceholder()}</>}
+                //ListEmptyComponent={this.renderEmpty}
             />
         )
     }
