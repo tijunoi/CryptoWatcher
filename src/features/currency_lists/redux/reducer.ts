@@ -1,13 +1,20 @@
-import { CurrencyListsActions, GET_DAILY_STATS_LIST_COMMIT } from './types'
+import {
+    CurrencyListsActions,
+    GET_DAILY_STATS_LIST,
+    GET_DAILY_STATS_LIST_COMMIT,
+    GetDailyStatsListCommitAction,
+} from './types'
 
 interface CurrenciesState {
     lastUpdate: number | null
     list: DailyStatsSymbol[]
+    loading: boolean
 }
 
 const initialState: CurrenciesState = {
     lastUpdate: null,
     list: [],
+    loading: false,
 }
 
 const currencyLists = (
@@ -15,25 +22,46 @@ const currencyLists = (
     action: CurrencyListsActions
 ): CurrenciesState => {
     switch (action.type) {
+        case GET_DAILY_STATS_LIST:
+            return { ...state, loading: true }
         case GET_DAILY_STATS_LIST_COMMIT:
-            if (action.payload === undefined) return state
-
-            if (action.payload instanceof Array) {
-                const newStats = action.payload.map(
-                    (value): DailyStatsSymbol => {
-                        return { ...value, favorite: false }
-                    }
-                )
-
-                return { ...state, list: newStats, lastUpdate: Date.now() }
-            }
-
-            return { ...state, list: [...state.list, { ...action.payload, favorite: false }] }
-        // case SET_DAILY_STATS_LIST:
-        //     return { ...state, list: action.payload, lastUpdate: Date.now() }
+            return processNewDailyStatsList(state, action)
         default:
             return state
     }
+}
+
+function processNewDailyStatsList(
+    state: CurrenciesState,
+    action: GetDailyStatsListCommitAction
+): CurrenciesState {
+    if (action.payload === undefined) return state
+
+    if (action.payload instanceof Array && action.payload.length > 0) {
+        //Convert old list to map for easier access
+        const hashmap = new Map(
+            state.list.map(
+                (value): [DailyStatsSymbol['symbol'], DailyStatsSymbol] => [value.symbol, value]
+            )
+        )
+
+        //Append the favorite property to the new list checking if existed before on the hashmap
+        const newStats = action.payload.map(
+            (value): DailyStatsSymbol => {
+                const oldSymbolData = hashmap.get(value.symbol)
+
+                let favorite = false
+                if (oldSymbolData !== undefined) {
+                    favorite = oldSymbolData.favorite
+                }
+
+                return { ...value, favorite }
+            }
+        )
+
+        return { ...state, list: newStats, lastUpdate: Date.now(), loading: false }
+    }
+    return state
 }
 
 export default currencyLists

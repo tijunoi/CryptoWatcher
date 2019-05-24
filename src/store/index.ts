@@ -4,6 +4,7 @@ import logger from 'redux-logger'
 import { offline } from '@redux-offline/redux-offline'
 //Use default config as standard persistence is enough
 import offlineConfig from '@redux-offline/redux-offline/lib/defaults'
+import { AppState as OfflineAppState } from '@redux-offline/redux-offline/lib/types'
 import rootReducer from './reducers'
 //import { discard, effect } from './offline'
 
@@ -20,3 +21,7 @@ const store = createStore(
 )
 
 export default store
+
+type RootReducerState = ReturnType<typeof rootReducer>
+
+export type AppState = RootReducerState & OfflineAppState
