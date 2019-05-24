@@ -883,7 +883,7 @@
     react-native-safe-area-view "^0.14.1"
     react-native-screens "^1.0.0 || ^1.0.0-alpha"
 
-"@redux-offline/redux-offline@^2.4.0":
+"@redux-offline/redux-offline@^2.5.1":
   version "2.5.1"
   resolved "https://registry.yarnpkg.com/@redux-offline/redux-offline/-/redux-offline-2.5.1.tgz#fc752e2ba3c21bfc7ac2dda9d1319e65891eda6c"
   integrity sha512-XQ8kK77cxAkCxPhlsQhvZlphdmoA7JHFpmSq6CLlxoX40ZRPPc5Yw+SeHCQG9sPE6kTEnrfnNYZOSEEf9ODkVQ==
