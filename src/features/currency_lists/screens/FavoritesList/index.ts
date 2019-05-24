@@ -1,3 +1,4 @@
-import FavoritesList from './FavoritesList'
+import FavoritesListContainer from './FavoritesListContainer'
 
-export default FavoritesList
+export { default as FavoritesListBase } from './FavoritesList'
+export default FavoritesListContainer

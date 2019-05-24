@@ -3,11 +3,15 @@ import { FlatList, View, Text } from 'react-native'
 import { SymbolCard } from '..'
 // @ts-ignore
 import Placeholder, { Line } from 'rn-placeholder'
+import moment from 'moment'
 
 export interface OwnProps {
     currencyList: DailyStatsSymbol[]
+    /** List has triggered a refresh and the request is being made */
     isListRefreshing: boolean
     onRefresh?: () => void
+    lastUpdated?: number
+    emptyMessage: string
 }
 
 type Props = OwnProps
@@ -20,16 +24,14 @@ class CurrencyList extends Component<Props> {
         return <SymbolCard data={item} />
     }
 
-    renderEmptyPlaceholder = (): ReactElement[] => {
-        const { isListRefreshing } = this.props
+    renderEmptyPlaceholder = (): ReactElement[] | ReactElement => {
         const placeholders: ReactElement[] = []
 
         for (let i = 0; i < 10; i++) {
             placeholders.push(
                 <Placeholder
-                    isReady={!isListRefreshing}
+                    isReady={false}
                     animation="fade"
-                    whenReadyRender={this.renderEmpty}
                     renderRight={(): ReactElement => <Line />}>
                     <Line width="70%" />
                     <Line />
@@ -37,14 +39,23 @@ class CurrencyList extends Component<Props> {
                 </Placeholder>
             )
         }
-
         return placeholders
     }
 
     renderEmpty = (): ReactElement => {
+        const { isListRefreshing, emptyMessage } = this.props
+        const comp = isListRefreshing ? this.renderEmptyPlaceholder() : <Text>{emptyMessage}</Text>
+
         return (
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <Text>Could not retrieve any data</Text>
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>{comp}</View>
+        )
+    }
+
+    renderHeader = (): ReactElement => {
+        const { lastUpdated } = this.props
+        return (
+            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', margin: 4 }}>
+                <Text>Last updated: {moment(lastUpdated).fromNow()}</Text>
             </View>
         )
     }
@@ -58,8 +69,8 @@ class CurrencyList extends Component<Props> {
                 onRefresh={onRefresh}
                 renderItem={this.renderItem}
                 keyExtractor={(item): string => item.symbol}
-                ListEmptyComponent={(): ReactElement => <>{this.renderEmptyPlaceholder()}</>}
-                //ListEmptyComponent={this.renderEmpty}
+                ListEmptyComponent={this.renderEmpty}
+                ListHeaderComponent={this.renderHeader}
             />
         )
     }

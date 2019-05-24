@@ -1,5 +1,6 @@
 import React, { Component, ReactElement } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
+//These libraries don't have typings available so ts can't get module information
 // @ts-ignore
 import Crypto from 'cryptocurrencies'
 // @ts-ignore
@@ -38,10 +39,17 @@ class SymbolCard extends Component<Props> {
         this.cryptoName = Crypto[this.cryptoSymbol] || this.cryptoSymbol
     }
 
-    renderCard = (): ReactElement => {
+    dispatchFavorite = (newFavorite: boolean): void => {
+        const { setFavorite, data } = this.props
+        setFavorite(data.symbol, newFavorite)
+    }
+
+    renderCardContent = (): ReactElement => {
         const { data } = this.props
 
+        //Check if there is an icon for the symbol, otherwise apply BTC icon
         const iconExists = Icons[this.cryptoSymbol.toLowerCase()]
+
         const iconStyle = iconExists ? styles.cryptoIcon : styles.genericIcon
         const priceStyle =
             parseFloat(data.lastPrice) > parseFloat(data.weightedAvgPrice)
@@ -49,32 +57,24 @@ class SymbolCard extends Component<Props> {
                 : styles.negativeChange
 
         return (
-            <View style={[styles.container, styles.card]}>
-                <View
-                    style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-around',
-                        alignItems: 'center',
-                        flex: 1,
-                        marginVertical: 12,
-                        marginHorizontal: 8,
-                    }}>
+            <>
+                <View style={styles.firstRow}>
                     <CryptoIcon
                         name={iconExists ? this.cryptoSymbol.toLowerCase() : 'btc'}
                         style={iconStyle}
                     />
-                    <Text style={{ flex: 1, fontWeight: 'bold' }}>{`${this.cryptoSymbol} | ${
+                    <Text style={styles.symbolNameText}>{`${this.cryptoSymbol} | ${
                         this.cryptoName
                     }`}</Text>
-                    <Text style={[{ alignSelf: 'center', fontSize: 20 }, priceStyle]}>
+                    <Text style={[styles.priceText, priceStyle]}>
                         {parseFloat(data.lastPrice)}$
                     </Text>
                 </View>
-                <View style={{ margin: 4, flexDirection: 'row', justifyContent: 'space-around' }}>
+                <View style={styles.secondRow}>
                     <Text style={{ flex: 1 }}>Change: {parseFloat(data.priceChange)}$</Text>
                     <Text>Avg: {parseFloat(data.weightedAvgPrice)}$</Text>
                 </View>
-                <View style={{ margin: 4, marginBottom: 8, flexDirection: 'row' }}>
+                <View style={styles.thirdRow}>
                     <Text>
                         24h:{' '}
                         <Text
@@ -87,30 +87,29 @@ class SymbolCard extends Component<Props> {
                         </Text>
                     </Text>
                 </View>
-                <View style={{ flex: 1, flexDirection: 'row-reverse' }}>
+                <View style={styles.fourthRow}>
                     <FavoriteButton favorite={data.favorite} onPress={this.dispatchFavorite} />
                 </View>
-            </View>
+            </>
         )
-    }
-
-    dispatchFavorite = (newFavorite: boolean): void => {
-        const { setFavorite, data } = this.props
-        setFavorite(data.symbol, newFavorite)
     }
 
     render(): ReactElement {
         const { showPlaceholder } = this.props
         return (
-            <Placeholder
-                isReady={!showPlaceholder}
-                animation="fade"
-                whenReadyRender={this.renderCard}
-                renderLeft={(): ReactElement => <Media hasRadius />}>
-                <Line width="70%" />
-                <Line />
-                <Line width="30%" />
-            </Placeholder>
+            <View style={[styles.container, styles.card]}>
+                <Placeholder
+                    isReady={!showPlaceholder}
+                    animation="fade"
+                    whenReadyRender={this.renderCardContent}
+                    renderLeft={(): ReactElement => <Media hasRadius />}>
+                    <View style={{ height: 150 }}>
+                        <Line width="70%" />
+                        <Line />
+                        <Line width="30%" />
+                    </View>
+                </Placeholder>
+            </View>
         )
     }
 }
@@ -121,7 +120,10 @@ const styles = StyleSheet.create({
     cryptoIcon: {
         fontSize: 20,
         margin: 8,
+        textAlignVertical: 'top',
         marginRight: 16,
+        // to avoid extra font padding on android with cryptocoins font
+        includeFontPadding: false,
     },
     genericIcon: {
         fontSize: 20,
@@ -139,8 +141,9 @@ const styles = StyleSheet.create({
     },
     card: {
         padding: 8,
-        backgroundColor: '#ffebd0',
+        backgroundColor: '#feffe1',
         borderRadius: 6,
+        elevation: 4,
         shadowColor: '#000000',
         shadowOpacity: 0.3,
         shadowRadius: 1,
@@ -158,5 +161,35 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 14,
         color: '#94141a',
+    },
+    firstRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        marginVertical: 4,
+        marginHorizontal: 8,
+        height: 40,
+    },
+    symbolNameText: {
+        flex: 1,
+        fontWeight: 'bold',
+    },
+    priceText: {
+        alignSelf: 'center',
+        fontSize: 20,
+    },
+    secondRow: {
+        margin: 4,
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+    },
+    thirdRow: {
+        margin: 4,
+        marginBottom: 8,
+        flexDirection: 'row',
+    },
+    fourthRow: {
+        flex: 1,
+        flexDirection: 'row-reverse',
     },
 })

@@ -1,3 +1,4 @@
-import TopGainersList from './TopGainersList'
+import TopGainersListContainer from './TopGainersListContainer'
 
-export default TopGainersList
+export { default as TopGainersListBase } from './TopGainersList'
+export default TopGainersListContainer

@@ -2,14 +2,14 @@ import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import { getDailyStatsList } from '../../redux/actions'
 import { AppState } from '../../../../store'
-import MainList, { DispatchProps, StoreProps } from './MainList'
+import FavoritesList, { DispatchProps, StoreProps } from './FavoritesList'
 import { isListRefreshing } from '../../../../store/selectors'
-import { getUSDTSymbols } from '../../redux/selectors'
+import { getFavorites } from '../../redux/selectors'
 import { isDeviceOnline } from '../../../offline/redux/selectors'
 
 const mapStateToProps = (state: AppState): StoreProps => ({
     isListRefreshing: isListRefreshing(state),
-    list: getUSDTSymbols(state),
+    list: getFavorites(state),
     online: isDeviceOnline(state),
 })
 
@@ -22,4 +22,4 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
 export default connect<StoreProps, DispatchProps, null, AppState>(
     mapStateToProps,
     mapDispatchToProps
-)(MainList)
+)(FavoritesList)

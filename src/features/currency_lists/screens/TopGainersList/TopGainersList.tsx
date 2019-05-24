@@ -1,16 +1,35 @@
-import React, { Component } from 'react'
-import { View, Text } from 'react-native'
+import React, { Component, ReactElement } from 'react'
+import { View } from 'react-native'
 import { NavigationDrawerScreenOptions } from 'react-navigation'
+import { CurrencyList } from '../../components'
 
-class TopGainersList extends Component {
+export interface StoreProps {
+    list: DailyStatsSymbol[]
+    online: boolean
+    isListRefreshing: boolean
+}
+
+export interface DispatchProps {
+    getDailyStats: () => void
+}
+
+type Props = StoreProps & DispatchProps
+
+class TopGainersList extends Component<Props> {
     static navigationOptions: NavigationDrawerScreenOptions = {
         drawerLabel: 'Top gainers',
     }
 
-    render() {
+    render(): ReactElement {
+        const { list, isListRefreshing, getDailyStats } = this.props
         return (
             <View>
-                <Text> MainList!!!</Text>
+                <CurrencyList
+                    isListRefreshing={isListRefreshing}
+                    currencyList={list}
+                    onRefresh={getDailyStats}
+                    emptyMessage="Could not retrieve any data"
+                />
             </View>
         )
     }

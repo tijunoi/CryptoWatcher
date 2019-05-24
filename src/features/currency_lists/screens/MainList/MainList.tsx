@@ -33,6 +33,7 @@ class MainList extends Component<Props> {
                     isListRefreshing={isListRefreshing}
                     currencyList={list}
                     onRefresh={getDailyStats}
+                    emptyMessage="Could not retrieve any data."
                 />
             </View>
         )

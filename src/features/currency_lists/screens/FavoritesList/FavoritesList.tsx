@@ -1,16 +1,35 @@
-import React, { Component } from 'react'
-import { View, Text } from 'react-native'
+import React, { Component, ReactElement } from 'react'
+import { View } from 'react-native'
 import { NavigationDrawerScreenOptions } from 'react-navigation'
+import { CurrencyList } from '../../components'
 
-class FavoritesList extends Component {
+export interface StoreProps {
+    list: DailyStatsSymbol[]
+    online: boolean
+    isListRefreshing: boolean
+}
+
+export interface DispatchProps {
+    getDailyStats: () => void
+}
+
+type Props = StoreProps & DispatchProps
+
+class FavoritesList extends Component<Props> {
     static navigationOptions: NavigationDrawerScreenOptions = {
         drawerLabel: 'Favorites',
     }
 
-    render() {
+    render(): ReactElement {
+        const { list, isListRefreshing, getDailyStats } = this.props
         return (
             <View>
-                <Text> Favorites list!!!</Text>
+                <CurrencyList
+                    isListRefreshing={isListRefreshing}
+                    currencyList={list}
+                    onRefresh={getDailyStats}
+                    emptyMessage="Looks like you don't have any favorites."
+                />
             </View>
         )
     }
