@@ -2,7 +2,12 @@ import { OfflineAction } from '@redux-offline/redux-offline/lib/types'
 import offlineConfig from '@redux-offline/redux-offline/lib/defaults'
 import { isBinanceAction } from '../features/currency_lists/redux/types'
 
+//This code is not used anymore since the binance api node wrapper had to be deleted
+// because of incompatibility with react native (crypto module node dependency)
+// Nonetheless I wanted to leave this code here as it was part of the process
+
 /**
+ * @deprecated
  * Custom effect reconciler to use Binance client for binance-api requests
  * with a passthrough to default redux-offline reconciler for the rest of actions
  * @param effect
@@ -21,6 +26,12 @@ export const effect: (effect: any, action: OfflineAction) => Promise<any> = (
     }
 }
 
+/**
+ * @deprecated
+ * @param error
+ * @param action
+ * @param retries
+ */
 export const discard: (error: any, action: OfflineAction, retries: number) => boolean = (
     error: any,
     action: OfflineAction,

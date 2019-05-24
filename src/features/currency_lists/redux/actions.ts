@@ -1,4 +1,3 @@
-import Binance from 'binance-api-node'
 import {
     CurrencyListsActions,
     GET_DAILY_STATS_LIST,
@@ -8,17 +7,16 @@ import {
     GetDailyStatsListCommitAction,
 } from './types'
 
-const client = Binance()
-
 /**
  * Create redux-offline action that will call dailyStats of all symbols in Binance
  */
 export const getDailyStatsList = (): CurrencyListsActions => ({
     type: GET_DAILY_STATS_LIST,
-    useBinanceClient: true,
+    // useBinanceClient: true,
     meta: {
         offline: {
-            effect: client.dailyStats,
+            // effect: client.dailyStats,
+            effect: { url: 'https://api.binance.com/api/v1/ticker/24hr', method: 'GET' },
             commit: getDailyStatsListCommit(),
         },
     },
