@@ -6,13 +6,10 @@ import Placeholder, { Line } from 'rn-placeholder'
 
 export interface OwnProps {
     currencyList: DailyStatsSymbol[]
-}
-
-export interface StoreProps {
     isListRefreshing: boolean
 }
 
-type Props = StoreProps & OwnProps
+type Props = OwnProps
 class CurrencyList extends Component<Props> {
     static defaultProps = {
         currencyList: [],
