@@ -1,8 +1,8 @@
 import {
     CurrencyListsActions,
     GET_DAILY_STATS_LIST,
-    SetDailyStatsListAction,
-    SET_DAILY_STATS_LIST,
+    SetFavoriteSymbolAction,
+    SET_FAVORITE_SYMBOL,
     GET_DAILY_STATS_LIST_COMMIT,
     GetDailyStatsListCommitAction,
 } from './types'
@@ -27,9 +27,10 @@ const getDailyStatsListCommit = (): GetDailyStatsListCommitAction => ({
     //payload is injected by redux-offline
 })
 
-export const setDailyStatsList = (
-    payload: SetDailyStatsListAction['payload']
+export const setFavoriteSymbol = (
+    symbol: SetFavoriteSymbolAction['payload']['symbol'],
+    favorite: SetFavoriteSymbolAction['payload']['favorite']
 ): CurrencyListsActions => ({
-    type: SET_DAILY_STATS_LIST,
-    payload,
+    type: SET_FAVORITE_SYMBOL,
+    payload: { symbol, favorite },
 })

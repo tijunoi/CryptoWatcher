@@ -7,6 +7,9 @@ export const getSymbolList = (state: AppState): AppState['currencyLists']['list'
 export const getLastUpdate = (state: AppState): AppState['currencyLists']['lastUpdate'] =>
     state.currencyLists.lastUpdate
 
+export const getLoading = (state: AppState): AppState['currencyLists']['loading'] =>
+    state.currencyLists.loading
+
 /**
  * Filter symbol list for pairs that match with USDT
  * Based on the screenshot of the Coding test PDF, only shows the price of

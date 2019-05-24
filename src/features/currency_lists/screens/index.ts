@@ -1,6 +1,6 @@
 /**
  * Main screen components are exported from here.
- * To import aditional symbols from a specific screen
+ * To import additional symbols from a specific screen
  * import that module directly;
  */
 
