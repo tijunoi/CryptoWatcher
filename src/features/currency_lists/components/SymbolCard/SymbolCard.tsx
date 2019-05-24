@@ -8,6 +8,7 @@ import CryptoIcon from 'react-native-crypto-icons'
 import Icons from 'react-native-crypto-icons/lib/CryptoIconUnicodes'
 // @ts-ignore
 import Placeholder, { Line, Media } from 'rn-placeholder'
+import FavoriteButton from '../FavoriteButton'
 
 export interface StoreProps {
     showPlaceholder: boolean
@@ -86,8 +87,16 @@ class SymbolCard extends Component<Props> {
                         </Text>
                     </Text>
                 </View>
+                <View style={{ flex: 1, flexDirection: 'row-reverse' }}>
+                    <FavoriteButton favorite={data.favorite} onPress={this.dispatchFavorite} />
+                </View>
             </View>
         )
+    }
+
+    dispatchFavorite = (newFavorite: boolean): void => {
+        const { setFavorite, data } = this.props
+        setFavorite(data.symbol, newFavorite)
     }
 
     render(): ReactElement {
@@ -123,7 +132,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
-        alignItems: 'flex-start',
+        alignItems: 'stretch',
         backgroundColor: '#F5FCFF',
         justifyContent: 'flex-start',
         margin: 5,
