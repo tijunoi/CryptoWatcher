@@ -1,6 +1,6 @@
 export const GET_DAILY_STATS_LIST = 'GET_DAILY_STATS_LIST'
 export const GET_DAILY_STATS_LIST_COMMIT = 'GET_DAILY_STATS_LIST_COMMIT'
-export const SET_DAILY_STATS_LIST = 'SET_DAILY_STATS_LIST'
+export const SET_FAVORITE_SYMBOL = 'SET_FAVORITE_SYMBOL'
 
 /**
  * @deprecated
@@ -28,15 +28,18 @@ export interface GetDailyStatsListCommitAction {
     payload?: DailyStatsResult | DailyStatsResult[]
 }
 
-export interface SetDailyStatsListAction {
-    type: typeof SET_DAILY_STATS_LIST
-    payload: DailyStatsResult[]
+export interface SetFavoriteSymbolAction {
+    type: typeof SET_FAVORITE_SYMBOL
+    payload: {
+        symbol: DailyStatsSymbol['symbol']
+        favorite: DailyStatsSymbol['favorite']
+    }
 }
 
 export type CurrencyListsActions =
     | GetDailyStatsListAction
     | GetDailyStatsListCommitAction
-    | SetDailyStatsListAction
+    | SetFavoriteSymbolAction
 
 export function isBinanceAction(action: any): action is BinanceClientOfflineAction {
     return action.useBinanceClient

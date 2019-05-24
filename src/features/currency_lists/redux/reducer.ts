@@ -3,6 +3,8 @@ import {
     GET_DAILY_STATS_LIST,
     GET_DAILY_STATS_LIST_COMMIT,
     GetDailyStatsListCommitAction,
+    SET_FAVORITE_SYMBOL,
+    SetFavoriteSymbolAction,
 } from './types'
 
 interface CurrenciesState {
@@ -26,6 +28,8 @@ const currencyLists = (
             return { ...state, loading: true }
         case GET_DAILY_STATS_LIST_COMMIT:
             return processNewDailyStatsList(state, action)
+        case SET_FAVORITE_SYMBOL:
+            return setFavoriteSymbol(state, action)
         default:
             return state
     }
@@ -62,6 +66,18 @@ function processNewDailyStatsList(
         return { ...state, list: newStats, lastUpdate: Date.now(), loading: false }
     }
     return state
+}
+
+function setFavoriteSymbol(
+    state: CurrenciesState,
+    action: SetFavoriteSymbolAction
+): CurrenciesState {
+    const newStats = state.list.map(value => {
+        return value.symbol === action.payload.symbol
+            ? { ...value, favorite: action.payload.favorite }
+            : value
+    })
+    return { ...state, list: newStats }
 }
 
 export default currencyLists
