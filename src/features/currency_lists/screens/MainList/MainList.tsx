@@ -1,7 +1,13 @@
 import React, { Component, ReactElement } from 'react'
 import { View } from 'react-native'
-import { NavigationDrawerScreenOptions } from 'react-navigation'
+import {
+    NavigationDrawerScreenOptions,
+    NavigationScreenProps,
+    NavigationStackScreenOptions,
+} from 'react-navigation'
+import { Icon } from 'react-native-elements'
 import { CurrencyList } from '../../components'
+import { createScreenHeaderOptions } from '../screenHeader'
 
 export interface StoreProps {
     list: DailyStatsSymbol[]
@@ -17,8 +23,13 @@ export interface DispatchProps {
 type Props = StoreProps & DispatchProps
 
 class MainList extends Component<Props> {
-    static navigationOptions: NavigationDrawerScreenOptions = {
+    static navigationOptions = (navProps: NavigationScreenProps): NavigationStackScreenOptions => ({
+        ...createScreenHeaderOptions(navProps, 'CryptoWatcher'),
+    })
+
+    static drawerNavigationOptions: NavigationDrawerScreenOptions = {
         drawerLabel: 'All currencies',
+        drawerIcon: <Icon name="md-home" type="ionicon" />,
     }
 
     componentDidMount(): void {

@@ -197,5 +197,6 @@ const styles = StyleSheet.create({
     fourthRow: {
         flex: 1,
         flexDirection: 'row-reverse',
+        paddingBottom: 8,
     },
 })

@@ -1,7 +1,13 @@
 import React, { Component, ReactElement } from 'react'
 import { View } from 'react-native'
-import { NavigationDrawerScreenOptions } from 'react-navigation'
+import {
+    NavigationDrawerScreenOptions,
+    NavigationScreenProps,
+    NavigationStackScreenOptions,
+} from 'react-navigation'
+import { Icon } from 'react-native-elements'
 import { CurrencyList } from '../../components'
+import { createScreenHeaderOptions } from '../screenHeader'
 
 export interface StoreProps {
     list: DailyStatsSymbol[]
@@ -17,8 +23,13 @@ export interface DispatchProps {
 type Props = StoreProps & DispatchProps
 
 class TopGainersList extends Component<Props> {
-    static navigationOptions: NavigationDrawerScreenOptions = {
+    static navigationOptions = (navProps: NavigationScreenProps): NavigationStackScreenOptions => ({
+        ...createScreenHeaderOptions(navProps, 'Top gainers | 24h'),
+    })
+
+    static drawerNavigationOptions: NavigationDrawerScreenOptions = {
         drawerLabel: 'Top gainers',
+        drawerIcon: <Icon name="md-ribbon" type="ionicon" />,
     }
 
     render(): ReactElement {

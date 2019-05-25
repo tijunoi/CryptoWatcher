@@ -1,5 +1,6 @@
 import React, { ReactElement } from 'react'
 import { StyleSheet, TouchableOpacity, Text, StyleProp, ViewStyle, TextStyle } from 'react-native'
+import { Icon } from 'react-native-elements'
 
 interface OwnProps {
     favorite: boolean
@@ -15,13 +16,18 @@ interface ButtonStyle {
 type Props = OwnProps
 
 const FavoriteButton: React.FC<Props> = ({ onPress, favorite, style = {} }): ReactElement => {
+    const options = favorite
+        ? { text: texts.remove, icon: 'md-star' }
+        : { text: texts.add, icon: 'md-star-outline' }
+
     return (
         <TouchableOpacity
-            style={style.touchable}
+            style={[styles.container, style.touchable]}
             onPress={(): void => {
                 onPress(!favorite)
             }}>
-            <Text style={[styles.button, style.text]}>{favorite ? texts.remove : texts.add}</Text>
+            <Text style={[styles.text, style.text]}>{options.text}</Text>
+            <Icon name={options.icon} type="ionicon" iconStyle={styles.icon} />
         </TouchableOpacity>
     )
 }
@@ -30,19 +36,30 @@ export default FavoriteButton
 
 //In absence of a better solution for texts
 const texts = {
-    add: 'Add to favorites',
-    remove: 'Remove from favorites',
+    add: 'ADD TO',
+    remove: 'REMOVE',
 }
 
 const styles = StyleSheet.create({
-    button: {
-        backgroundColor: '#3c95ff',
-        borderRadius: 12,
+    text: {
         color: 'white',
-        fontSize: 10,
+        fontSize: 12,
         fontWeight: 'bold',
         overflow: 'hidden',
-        padding: 12,
+        //textAlignVertical: 'center',
         textAlign: 'center',
+        paddingRight: 6,
+    },
+    container: {
+        backgroundColor: '#3c95ff',
+        borderRadius: 12,
+        paddingHorizontal: 12,
+        paddingVertical: 8,
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'row',
+    },
+    icon: {
+        color: 'white',
     },
 })
