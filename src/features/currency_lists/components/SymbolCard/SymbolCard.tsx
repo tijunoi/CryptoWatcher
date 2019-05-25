@@ -125,7 +125,6 @@ const styles = StyleSheet.create({
     cryptoIcon: {
         fontSize: 20,
         margin: 8,
-        textAlignVertical: 'top',
         marginRight: 16,
         // to avoid extra font padding on android with cryptocoins font
         includeFontPadding: false,
@@ -134,7 +133,9 @@ const styles = StyleSheet.create({
         fontSize: 20,
         margin: 8,
         marginRight: 16,
-        color: '#505050',
+        color: '#7d7d7d',
+        // to avoid extra font padding on android with cryptocoins font
+        includeFontPadding: false,
     },
     container: {
         flex: 1,
