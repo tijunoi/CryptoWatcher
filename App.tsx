@@ -1,8 +1,9 @@
 import { createAppContainer } from 'react-navigation'
 import React, { Component } from 'react'
 import { Provider } from 'react-redux'
+import { PersistGate } from 'redux-persist/integration/react'
 import appNavigator from './src/navigation/navigators'
-import store from './src/store'
+import store, { persistor } from './src/store'
 
 const AppContainer = createAppContainer(appNavigator)
 
@@ -12,7 +13,9 @@ class App extends Component {
     render(): React.ReactElement {
         return (
             <Provider store={store}>
-                <AppContainer />
+                <PersistGate persistor={persistor}>
+                    <AppContainer />
+                </PersistGate>
             </Provider>
         )
     }

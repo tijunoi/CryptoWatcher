@@ -1,25 +1,38 @@
 import { createStore, applyMiddleware } from 'redux'
 import { composeWithDevTools } from 'redux-devtools-extension'
+import { AsyncStorage } from 'react-native'
 import logger from 'redux-logger'
-import { offline } from '@redux-offline/redux-offline'
+import { createOffline } from '@redux-offline/redux-offline'
+import { persistStore, persistReducer } from 'redux-persist'
 //Use default config as standard persistence is enough
 import offlineConfig from '@redux-offline/redux-offline/lib/defaults'
 import { AppState as OfflineAppState } from '@redux-offline/redux-offline/lib/types'
 import rootReducer from './reducers'
 //import { discard, effect } from './offline'
 
-//compose with empty options as redux-devtools and redux-offline have typescript typings mismatch
-const compose = composeWithDevTools({})
+const persistConfig = {
+    key: 'root',
+    storage: AsyncStorage,
+}
+
+const {
+    middleware: offlineMiddleware,
+    enhanceReducer: offlineEnhanceReducer,
+    enhanceStore: offlineEnhanceStore,
+} = createOffline({
+    ...offlineConfig,
+    //efect, discard,
+    persist: (): false => false,
+})
+
+const persistedReducer = persistReducer(persistConfig, offlineEnhanceReducer(rootReducer))
 
 const store = createStore(
-    rootReducer,
-    compose(
-        applyMiddleware(logger),
-        offline(offlineConfig)
-        // offline({ ...offlineConfig, effect, discard })
-    )
+    persistedReducer,
+    composeWithDevTools(offlineEnhanceStore as any, applyMiddleware(offlineMiddleware, logger))
 )
 
+export const persistor = persistStore(store)
 export default store
 
 type RootReducerState = ReturnType<typeof rootReducer>
