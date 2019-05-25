@@ -10,6 +10,7 @@ import Icons from 'react-native-crypto-icons/lib/CryptoIconUnicodes'
 // @ts-ignore
 import Placeholder, { Line, Media } from 'rn-placeholder'
 import FavoriteButton from '../FavoriteButton'
+import { isUndefined } from '../../../../utilities/typeGuards'
 
 export interface StoreProps {
     showPlaceholder: boolean
@@ -23,30 +24,34 @@ export interface DispatchProps {
 }
 
 export interface OwnProps {
-    data: DailyStatsSymbol
+    data?: DailyStatsSymbol
 }
 
-type Props = StoreProps & DispatchProps & OwnProps
+type Props = StoreProps & Partial<DispatchProps> & OwnProps
 
 class SymbolCard extends Component<Props> {
-    cryptoSymbol: string
-    cryptoName: string
+    cryptoSymbol: string = ''
+    cryptoName: string = ''
 
     constructor(props: Props) {
         super(props)
-        //Remove USDT from the symbol pair to get the crypto symbol
-        this.cryptoSymbol = props.data.symbol.slice(0, -4)
-        this.cryptoName = Crypto[this.cryptoSymbol] || this.cryptoSymbol
+        if (props.data) {
+            //Remove USDT from the symbol pair to get the crypto symbol
+            this.cryptoSymbol = props.data.symbol.slice(0, -4)
+            this.cryptoName = Crypto[this.cryptoSymbol] || this.cryptoSymbol
+        }
     }
 
     dispatchFavorite = (newFavorite: boolean): void => {
         const { setFavorite, data } = this.props
-        setFavorite(data.symbol, newFavorite)
+        if (isUndefined(data)) return
+        if (isUndefined(setFavorite)) return
+        setFavorite(data && data.symbol, newFavorite)
     }
 
-    renderCardContent = (): ReactElement => {
+    renderCardContent = (): ReactElement | null => {
         const { data } = this.props
-
+        if (isUndefined(data)) return null
         //Check if there is an icon for the symbol, otherwise apply BTC icon
         const iconExists = Icons[this.cryptoSymbol.toLowerCase()]
 

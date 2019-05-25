@@ -7,6 +7,7 @@ export interface StoreProps {
     list: DailyStatsSymbol[]
     online: boolean
     isListRefreshing: boolean
+    lastUpdated: number | null
 }
 
 export interface DispatchProps {
@@ -26,7 +27,7 @@ class MainList extends Component<Props> {
     }
 
     render(): ReactElement {
-        const { list, isListRefreshing, getDailyStats } = this.props
+        const { list, isListRefreshing, getDailyStats, lastUpdated } = this.props
         return (
             <View>
                 <CurrencyList
@@ -34,6 +35,7 @@ class MainList extends Component<Props> {
                     currencyList={list}
                     onRefresh={getDailyStats}
                     emptyMessage="Could not retrieve any data."
+                    lastUpdated={lastUpdated}
                 />
             </View>
         )

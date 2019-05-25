@@ -1,16 +1,15 @@
 import React, { Component, ReactElement } from 'react'
 import { FlatList, View, Text } from 'react-native'
-import { SymbolCard } from '..'
-// @ts-ignore
-import Placeholder, { Line } from 'rn-placeholder'
-import moment from 'moment'
+import { SymbolCard, LastUpdatedText } from '..'
+//Container-less card for the pre-loading placeholder
+import { SymbolCardBase } from '../SymbolCard'
 
 export interface OwnProps {
     currencyList: DailyStatsSymbol[]
     /** List has triggered a refresh and the request is being made */
     isListRefreshing: boolean
     onRefresh?: () => void
-    lastUpdated?: number
+    lastUpdated: number | null
     emptyMessage: string
 }
 
@@ -24,20 +23,11 @@ class CurrencyList extends Component<Props> {
         return <SymbolCard data={item} />
     }
 
-    renderEmptyPlaceholder = (): ReactElement[] | ReactElement => {
+    renderEmptyPlaceholder = (): ReactElement[] => {
         const placeholders: ReactElement[] = []
 
-        for (let i = 0; i < 10; i++) {
-            placeholders.push(
-                <Placeholder
-                    isReady={false}
-                    animation="fade"
-                    renderRight={(): ReactElement => <Line />}>
-                    <Line width="70%" />
-                    <Line />
-                    <Line width="30%" />
-                </Placeholder>
-            )
+        for (let i = 0; i < 5; i++) {
+            placeholders.push(<SymbolCardBase showPlaceholder key={i} />)
         }
         return placeholders
     }
@@ -51,17 +41,8 @@ class CurrencyList extends Component<Props> {
         )
     }
 
-    renderHeader = (): ReactElement => {
-        const { lastUpdated } = this.props
-        return (
-            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', margin: 4 }}>
-                <Text>Last updated: {moment(lastUpdated).fromNow()}</Text>
-            </View>
-        )
-    }
-
     render(): ReactElement {
-        const { currencyList, isListRefreshing, onRefresh } = this.props
+        const { currencyList, isListRefreshing, onRefresh, lastUpdated } = this.props
         return (
             <FlatList
                 refreshing={isListRefreshing}
@@ -70,7 +51,9 @@ class CurrencyList extends Component<Props> {
                 renderItem={this.renderItem}
                 keyExtractor={(item): string => item.symbol}
                 ListEmptyComponent={this.renderEmpty}
-                ListHeaderComponent={this.renderHeader}
+                ListHeaderComponent={(): ReactElement => (
+                    <LastUpdatedText lastUpdated={lastUpdated} />
+                )}
             />
         )
     }

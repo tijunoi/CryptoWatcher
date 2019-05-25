@@ -7,6 +7,7 @@ export interface StoreProps {
     list: DailyStatsSymbol[]
     online: boolean
     isListRefreshing: boolean
+    lastUpdated: number | null
 }
 
 export interface DispatchProps {
@@ -21,7 +22,7 @@ class FavoritesList extends Component<Props> {
     }
 
     render(): ReactElement {
-        const { list, isListRefreshing, getDailyStats } = this.props
+        const { list, isListRefreshing, getDailyStats, lastUpdated } = this.props
         return (
             <View>
                 <CurrencyList
@@ -29,6 +30,7 @@ class FavoritesList extends Component<Props> {
                     currencyList={list}
                     onRefresh={getDailyStats}
                     emptyMessage="Looks like you don't have any favorites."
+                    lastUpdated={lastUpdated}
                 />
             </View>
         )
