@@ -38,6 +38,7 @@ class ConnectionStatus extends PureComponent<Props> {
             title: "You're online",
             duration: 5000,
             action: isOfflineQueueEmpty ? action : undefined,
+            color: 'white',
         })
     }
 
