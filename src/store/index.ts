@@ -8,6 +8,7 @@ import { persistStore, persistReducer } from 'redux-persist'
 import offlineConfig from '@redux-offline/redux-offline/lib/defaults'
 import { AppState as OfflineAppState } from '@redux-offline/redux-offline/lib/types'
 import rootReducer from './reducers'
+import { queue } from './offline'
 //import { discard, effect } from './offline'
 
 const persistConfig = {
@@ -21,7 +22,8 @@ const {
     enhanceStore: offlineEnhanceStore,
 } = createOffline({
     ...offlineConfig,
-    //efect, discard,
+    queue,
+    //effect, discard,
     persist: (): false => false,
 })
 

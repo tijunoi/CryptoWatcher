@@ -1,6 +1,21 @@
 import { OfflineAction } from '@redux-offline/redux-offline/lib/types'
 import offlineConfig from '@redux-offline/redux-offline/lib/defaults'
+
 import { isBinanceAction } from '../features/currency_lists/redux/types'
+
+/**
+ * Queue reconciler that lets only one action with the same type stay on the queue
+ * Useful to avoid multiple api calls if the user refreshes a list multiple times
+ * while he/she is offline
+ */
+export const queue = {
+    ...offlineConfig.queue,
+    enqueue(array: OfflineAction[], action: OfflineAction): OfflineAction[] {
+        const newArray = array.filter(({ type }): boolean => !(type === action.type))
+        newArray.push(action)
+        return newArray
+    },
+}
 
 //This code is not used anymore since the binance api node wrapper had to be deleted
 // because of incompatibility with react native (crypto module node dependency)

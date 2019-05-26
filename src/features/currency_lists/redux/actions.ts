@@ -19,7 +19,6 @@ export const getDailyStatsList = (): CurrencyListsActions => ({
             effect: { url: 'https://api.binance.com/api/v1/ticker/24hr', method: 'GET' },
             commit: getDailyStatsListCommit(),
         },
-        transaction: 1,
     },
 })
 

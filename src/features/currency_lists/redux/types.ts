@@ -18,8 +18,6 @@ export interface GetDailyStatsListAction {
             effect: { url: 'https://api.binance.com/api/v1/ticker/24hr'; method: 'GET' }
             commit: GetDailyStatsListCommitAction
         }
-        /** Transaction number is static so the api call does not get repeated if the user refreshes multiple times  */
-        transaction: 1
     }
 }
 
