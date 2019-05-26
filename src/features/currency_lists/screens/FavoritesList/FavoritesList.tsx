@@ -8,6 +8,7 @@ import {
 import { Icon } from 'react-native-elements'
 import { CurrencyList } from '../../components'
 import { createScreenHeaderOptions } from '../screenHeader'
+import showOfflineSnackbarMessage from '../../../../utilities/showOfflineSnackbarMessage'
 
 export interface StoreProps {
     list: DailyStatsSymbol[]
@@ -32,14 +33,22 @@ class FavoritesList extends Component<Props> {
         drawerIcon: <Icon name="md-star" type="ionicon" />,
     }
 
+    onRefreshList = (): void => {
+        const { online, getDailyStats } = this.props
+        if (!online) {
+            showOfflineSnackbarMessage()
+        }
+        getDailyStats()
+    }
+
     render(): ReactElement {
-        const { list, isListRefreshing, getDailyStats, lastUpdated } = this.props
+        const { list, isListRefreshing, lastUpdated } = this.props
         return (
             <View>
                 <CurrencyList
                     isListRefreshing={isListRefreshing}
                     currencyList={list}
-                    onRefresh={getDailyStats}
+                    onRefresh={this.onRefreshList}
                     emptyMessage="Looks like you don't have any favorites."
                     lastUpdated={lastUpdated}
                 />
