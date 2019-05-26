@@ -1,8 +1,10 @@
 import React, { Component, ReactElement } from 'react'
-import { FlatList, View, Text } from 'react-native'
+import { FlatList, View, Text, StyleSheet } from 'react-native'
 import { SymbolCard, LastUpdatedText } from '..'
 //Container-less card for the pre-loading placeholder
+import { SearchBar } from 'react-native-elements'
 import { SymbolCardBase } from '../SymbolCard'
+import filterSymbolsList from '../../../../utilities/filterSymbolsList'
 
 export interface OwnProps {
     currencyList: DailyStatsSymbol[]
@@ -14,9 +16,33 @@ export interface OwnProps {
 }
 
 type Props = OwnProps
-class CurrencyList extends Component<Props> {
+
+interface State {
+    filteredList?: DailyStatsSymbol[]
+    search: string
+}
+
+class CurrencyList extends Component<Props, State> {
     static defaultProps = {
         currencyList: [],
+    }
+
+    state: State = {
+        search: '',
+    }
+
+    updateSearch = (search: string): void => {
+        const { currencyList } = this.props
+
+        if (!search.trim()) {
+            this.setState({
+                filteredList: undefined,
+                search,
+            })
+        } else {
+            const filteredList = currencyList.filter(filterSymbolsList(search))
+            this.setState({ filteredList, search })
+        }
     }
 
     renderItem = ({ item }: { item: DailyStatsSymbol }): ReactElement => {
@@ -36,27 +62,48 @@ class CurrencyList extends Component<Props> {
         const { isListRefreshing, emptyMessage } = this.props
         const comp = isListRefreshing ? this.renderEmptyPlaceholder() : <Text>{emptyMessage}</Text>
 
+        return <View style={styles.emptyContainer}>{comp}</View>
+    }
+
+    renderHeader = (): ReactElement => {
+        const { lastUpdated } = this.props
+        const { search } = this.state
         return (
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>{comp}</View>
+            <>
+                <LastUpdatedText lastUpdated={lastUpdated} />
+                <SearchBar
+                    placeholder="Search by symbol or name"
+                    onChangeText={this.updateSearch}
+                    value={search}
+                    lightTheme
+                />
+            </>
         )
     }
 
     render(): ReactElement {
-        const { currencyList, isListRefreshing, onRefresh, lastUpdated } = this.props
+        const { currencyList, isListRefreshing, onRefresh } = this.props
+        const { filteredList } = this.state
         return (
             <FlatList
                 refreshing={isListRefreshing}
-                data={currencyList}
+                data={filteredList || currencyList}
                 onRefresh={onRefresh}
                 renderItem={this.renderItem}
                 keyExtractor={(item): string => item.symbol}
                 ListEmptyComponent={this.renderEmpty}
-                ListHeaderComponent={(): ReactElement => (
-                    <LastUpdatedText lastUpdated={lastUpdated} />
-                )}
+                ListHeaderComponent={this.renderHeader}
             />
         )
     }
 }
 
 export default CurrencyList
+
+const styles = StyleSheet.create({
+    emptyContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+})
