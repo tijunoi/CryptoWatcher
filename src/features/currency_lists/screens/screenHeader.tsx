@@ -2,6 +2,7 @@ import { NavigationScreenProps, NavigationStackScreenOptions } from 'react-navig
 import { Icon } from 'react-native-elements'
 import React from 'react'
 import { StyleSheet } from 'react-native'
+import { ConnectionStatus } from '../../offline/components'
 
 // eslint-disable-next-line import/prefer-default-export
 export const createScreenHeaderOptions = (
@@ -18,6 +19,7 @@ export const createScreenHeaderOptions = (
             onPress={(): void => navigation.toggleDrawer()}
         />
     ),
+    headerRight: <ConnectionStatus />,
 })
 
 const styles = StyleSheet.create({
