@@ -17,7 +17,7 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
     },
 })
 
-export default connect<StoreProps, DispatchProps, null, AppState>(
+export default connect<StoreProps, DispatchProps, {}, AppState>(
     mapStateToProps,
     mapDispatchToProps
 )(withNavigationFocus(ConnectionStatus))
