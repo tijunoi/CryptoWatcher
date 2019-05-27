@@ -2,6 +2,8 @@
 
 This is my practice test for the React Native developer position at Holded.
 
+![](readme/1.png)![](readme/2.png)![](readme/3.png)![](readme/4.png)![](readme/5.png)
+
 ## Info
 The app does mostly what the test requires. It has a list of crypto trading pairs. Because of the provided screenshots
 as an example in the requirements PDF and to fit the style of it, the app only shows the pairs that trade a crypto coin
