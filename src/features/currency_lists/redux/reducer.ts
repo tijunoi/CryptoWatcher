@@ -72,11 +72,13 @@ function setFavoriteSymbol(
     state: CurrenciesState,
     action: SetFavoriteSymbolAction
 ): CurrenciesState {
-    const newStats = state.list.map(value => {
-        return value.symbol === action.payload.symbol
-            ? { ...value, favorite: action.payload.favorite }
-            : value
-    })
+    const newStats = state.list.map(
+        (value): DailyStatsSymbol => {
+            return value.symbol === action.payload.symbol
+                ? { ...value, favorite: action.payload.favorite }
+                : value
+        }
+    )
     return { ...state, list: newStats }
 }
 
